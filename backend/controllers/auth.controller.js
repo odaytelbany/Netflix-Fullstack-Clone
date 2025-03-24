@@ -40,7 +40,8 @@ export const signup = async (req, res) => {
     }
 
     const profileImages = ["/avatar1", "/avatar2", "/avatar3"];
-    const image = profileImages[Math.floor(Math.random() * profileImages.length)];
+    const image =
+      profileImages[Math.floor(Math.random() * profileImages.length)];
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -53,20 +54,57 @@ export const signup = async (req, res) => {
     });
     generateTokenAndSetCookies(newUser._id, res);
     await newUser.save();
-    res
-      .status(201)
-      .json({
-        success: true,
-        data: { user: { ...newUser._doc, password: "" } },
-      });
+    res.status(201).json({
+      success: true,
+      data: { user: { ...newUser._doc, password: "" } },
+    });
   } catch (error) {
     console.log("Error in signup controller", error);
-    res.status(400).json({ success: false, message: "Internal Server Error!" });
+    res.status(500).json({ success: false, message: "Internal Server Error!" });
   }
 };
 export const signin = async (req, res) => {
-  res.send("signin route");
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      res
+        .status(400)
+        .json({ success: false, message: "All Fields are required!" });
+    }
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Credentials!" });
+    }
+
+    const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordMatched) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Credentials!" });
+    }
+
+    generateTokenAndSetCookies(user._id, res);
+    res.status(200).json({
+      success: true,
+      data: { user: { ...user._doc, password: "" } },
+    });
+  } catch (error) {
+    console.log("Error in Sign in controller: ", error);
+    res.status(500).json({ success: false, message: "Internal server error!" });
+  }
 };
 export const logout = async (req, res) => {
-  res.send("logout route");
+  try {
+    res.clearCookie("jwt-netflix");
+    res
+      .status(200)
+      .json({ success: true, message: "Logged out successfully!" });
+  } catch (error) {
+    console.log("Error in Log out controller: ", error);
+    res.status(500).json({ success: false, message: "Internal server error!" });
+  }
 };
