@@ -5,7 +5,7 @@ export const getTrendingTv = async (req, res) => {
       "https://api.themoviedb.org/3/trending/tv/day?language=en-US"
     );
     const randomTv = data.results[Math.floor(Math.random() * data.results?.length)];
-    res.json({success: true, data: {randomTv: randomTv}});
+    res.json({success: true, data: {content: randomTv}});
   } catch (error) {
     console.log("Error in getTrendingTv controller: ", error);
     res.status(500).json({success: false, message: "Internal server error!"});

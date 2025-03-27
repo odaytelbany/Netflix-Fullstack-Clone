@@ -12,7 +12,8 @@ export const useAuthStore = create((set) => ({
     set({ isSigningUp: true });
     try {
       const response = await axios.post("/api/v1/auth/signup", credentials);
-      set({ user: response.data.user, isSigningUp: false });
+      console.log(response);
+      set({ user: response.data.data.user, isSigningUp: false });
       toast.success("Account Created Successfully!");
     } catch (error) {
       set({ user: null, isSigningUp: false });
@@ -25,7 +26,7 @@ export const useAuthStore = create((set) => ({
     try {
         const response = await axios.post("/api/v1/auth/signin", credentials);
         console.log(response)
-        set({user: response.data.user, isSigningIn: false});
+        set({user: response.data.data.user, isSigningIn: false});
         toast.success("You're Signed in successfully!");
     } catch (error) {
         console.log(error);
@@ -49,7 +50,7 @@ export const useAuthStore = create((set) => ({
     set({ isCheckingAuth: true });
     try {
       const response = await axios.get("/api/v1/auth/authCheck");
-      console.log(response);
+      console.log("response => ", response);
       set({ isCheckingAuth: false, user: response.data.user });
     } catch {
       set({ isCheckingAuth: false, user: null }); 
