@@ -53,7 +53,7 @@ export const getSimilarTvs = async (req, res) =>{
 export const getTvCategory = async (req, res) =>{
     try {
         const {category} = req.params;
-        const data = await fetchFromTmdb(`https://api.themoviedb.org/3/movie/${category}`)
+        const data = await fetchFromTmdb(`https://api.themoviedb.org/3/tv/${category}`)
         res.json({success: true, data: data.results });
     } catch (error) {
         return res.status(500).json({success: false, message: "Internal server error!"})
