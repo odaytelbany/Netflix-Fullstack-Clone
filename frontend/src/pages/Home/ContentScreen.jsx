@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../../components/Navbar";
 import { Link } from "react-router-dom";
 import { Info, Play } from "lucide-react";
@@ -8,6 +8,7 @@ import { useContentStore } from "../../store/content";
 import MovieSlider from "../../components/MovieSlider";
 
 const ContentScreen = () => {
+  const [imageLoading, setImageLoading] = useState(true);
   const { trendingContent } = useGetTrendingContent();
   const {contentType} = useContentStore();
 
@@ -22,10 +23,18 @@ const ContentScreen = () => {
     <>
       <div className="relative h-screen text-white">
         <Navbar />
+        {
+          imageLoading && (
+            <div className="absolute top-0 left-0 h-full w-full bg-black/70 flex items-center justify-center -z-10 shimmer"/>
+          )
+        }
         <img
           src={ORIGINAL_IMG_BASE_URL + trendingContent?.backdrop_path}
           className="absolute top-0 left-0 h-full w-full object-cover -z-50"
           alt="hero img"
+          onLoad={() => {
+            setImageLoading(false);
+          }}
         />
         <div
           className="absolute top-0 left-0 h-full w-full bg-black/50 -z-50"

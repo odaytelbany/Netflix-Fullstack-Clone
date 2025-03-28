@@ -11,7 +11,7 @@ const Navbar = () => {
   return (
     <header className='max--6xl mx-auto flex flex-wrap items-center justify-between h-20 p-4'>
         <div className='flex items-center gap-10 z-50'>
-            <Link>
+            <Link to={"/"}>
                 <img src='/netflix-logo.png' alt="netflix logo" className='w-32 sm:w-40'/>
             </Link>
             <div className='hidden sm:flex gap-2 items-center'>
@@ -36,7 +36,7 @@ const Navbar = () => {
                 <div className='w-full bg-black rounded border border-gray-800 mt-4 z-50 sm:hidden'>
                     <Link to={"/"} className='block hover:underline p-2' onClick={toggleMobileMenu}>Movies</Link>
                     <Link to={"/"} className='block hover:underline p-2' onClick={toggleMobileMenu}>TV Shows</Link>
-                    <Link to={"/"} className='block hover:underline p-2' onClick={toggleMobileMenu}>Search History</Link>
+                    <Link to={"/history"} className='block hover:underline p-2' onClick={toggleMobileMenu}>Search History</Link>
                 </div>
             )
         }
