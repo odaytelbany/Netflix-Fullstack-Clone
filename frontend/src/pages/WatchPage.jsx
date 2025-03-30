@@ -100,7 +100,6 @@ const WatchPage = () => {
     }
   };
 
-  console.log(similarContent);
 
   if (loading) return (
     <div className="min-h-screen bg-black p-10">

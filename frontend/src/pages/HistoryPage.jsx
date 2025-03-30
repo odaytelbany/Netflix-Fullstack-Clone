@@ -20,7 +20,6 @@ const HistoryPage = () => {
 
     getSearchHistory();
   }, []);
-  console.log(searchHistory);
 
   const handleDelete = async (item) => {
     try {
