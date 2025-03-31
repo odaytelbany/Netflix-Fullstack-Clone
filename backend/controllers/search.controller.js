@@ -142,6 +142,21 @@ export const getSearchHistory = async (req, res) => {
   }
 };
 
+export const clearHistory = async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.user._id, {
+      $set: {
+        searchHistory: []
+      },
+    });
+    res
+      .status(200)
+      .json({ success: true, message: "Search History Cleared Successfully" });
+  } catch (error) {
+    console.log("Error in clearHistory controller: ", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
 export const deleteItemFromSearchHistory = async (req, res) => {
   let { id } = req.params;
   id = parseInt(id);
