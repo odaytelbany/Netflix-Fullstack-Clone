@@ -64,7 +64,7 @@ const HistoryPage = () => {
                     key={item.id}
                     className="bg-gray-800 p-4 rounded flex items-start"
                 >
-                    <img src={SMALL_IMG_BASE_URL + item.image} alt="History Image" className="size-16 rounded-full object-cover mr-4"/>
+                    {item.image && <img src={SMALL_IMG_BASE_URL + item.image} alt="History Image" className="size-16 rounded-full object-cover mr-4"/>}
                     <div className="flex flex-col">
                         <span className="text-white text-lg">{item.title}</span>
                         <span className="text-gray-400 text-sm">{formatDate(item.createdAt)}</span>
