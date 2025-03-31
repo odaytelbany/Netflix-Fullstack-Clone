@@ -1,6 +1,6 @@
 @import "tailwindcss";
 .hero-bg {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.1)), url("hero.png");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.1)), url("/hero.png");
 }
 
 .shimmer {
@@ -44,4 +44,15 @@
     right: 10vw;
     position: absolute;
     z-index: -1;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 6px;
+}
+::-webkit-scrollbar-track {
+    background-color: #1a202c;
 }
