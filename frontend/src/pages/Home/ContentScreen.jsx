@@ -6,10 +6,12 @@ import useGetTrendingContent from "../../hooks/useGetTrendingContent";
 import { MOVIE_CATEGORIES, ORIGINAL_IMG_BASE_URL, TV_CATEGORIES } from "../../utils/constants";
 import { useContentStore } from "../../store/content";
 import MovieSlider from "../../components/MovieSlider";
+import useGetGenres from "../../hooks/useGetGenres";
 
 const ContentScreen = () => {
   const [imageLoading, setImageLoading] = useState(true);
   const { trendingContent } = useGetTrendingContent();
+  const { allGenres } = useGetGenres();
   const {contentType} = useContentStore();
 
   if (!trendingContent) return (
@@ -83,6 +85,11 @@ const ContentScreen = () => {
                 {
                   contentType === "movie" ? 
                   MOVIE_CATEGORIES.map((category) => <MovieSlider key={category} category={category}/>) : TV_CATEGORIES.map((category) => <MovieSlider key={category} category={category}/>)
+                }
+                {
+                  allGenres?.map((genre) => (
+                    <MovieSlider key={genre.id} genre={genre}/>
+                  ))
                 }
       </div>
     </>

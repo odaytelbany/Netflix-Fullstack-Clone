@@ -59,3 +59,26 @@ export const getmovieCategory = async (req, res) =>{
         return res.status(500).json({success: false, message: "Internal server error!"})
     }
 }
+
+
+
+export const getAllGenres = async (req, res) => {
+    try {
+      const data = await fetchFromTmdb(
+        "https://api.themoviedb.org/3/genre/movie/list?language=en"
+      );
+      res.json({success: true, data: data});
+    } catch (error) {
+      console.log("Error in getTrendingMovie controller: ", error);
+      res.status(500).json({success: false, message: "Internal server error!"});
+    }
+  };
+export const getmovieGenre = async (req, res) =>{
+    try {
+        const {genre} = req.params;
+        const data = await fetchFromTmdb(`https://api.themoviedb.org/3/discover/movie?with_genres=${genre}`)
+        res.json({success: true, data: data.results });
+    } catch (error) {
+        return res.status(500).json({success: false, message: "Internal server error!"})
+    }
+}
