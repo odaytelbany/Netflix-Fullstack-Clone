@@ -7,14 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import ReactPlayer from "react-player";
 import { ORIGINAL_IMG_BASE_URL, SMALL_IMG_BASE_URL } from "../utils/constants";
 import WatchPageSkeleton from "../components/skeletons/WatchPageSkeleton";
-
-const formatReleaseDate = (date) => {
-  return new Date(date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-};
+import { formatDate } from "../utils/formatDate";
 
 const WatchPage = () => {
   const { id } = useParams();
@@ -179,7 +172,7 @@ const WatchPage = () => {
               {content?.title || content?.name}
             </h2>
             <p className="mt-2 text-lg">
-              {formatReleaseDate(
+              {formatDate(
                 content?.release_date || content?.first_air_date
               )}{" "}
               |{" "}

@@ -105,7 +105,7 @@ const SearchPage = () => {
               <div key={result.id} className="bg-gray-800 p-4 rounded">
                 {activeTap === "person" ? (
                   <Link
-                    to={"/actor/" + result.name}
+                    to={`/person/${result.id}/details`}
                     className="flex flex-col items-center"
                   >
                     <img
@@ -117,13 +117,13 @@ const SearchPage = () => {
                   </Link>
                 ) : (
                   <Link
-                    to={"/watch/" + result.id}
+                    to={result?.media_type === "person" ? (`/person/${result.id}/details`) : ("/watch/" + result.id)}
                     onClick={() => {
                       setContentType(result?.media_type || activeTap);
                     }}
                   >
                     <img
-                      src={ORIGINAL_IMG_BASE_URL + result.poster_path}
+                      src={ORIGINAL_IMG_BASE_URL + (result.poster_path || result.profile_path)}
                       alt={result.name || result.title}
                       className="w-full h-auto rounded"
                     />

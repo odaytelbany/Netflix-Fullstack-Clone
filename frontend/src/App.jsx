@@ -11,6 +11,7 @@ import { Loader } from "lucide-react"
 import SearchPage from "./pages/SearchPage";
 import HistoryPage from "./pages/HistoryPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import PersonPage from "./pages/PersonPage";
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
         <Route path="/signup" element={!user ? <SignupPage /> : <Navigate to={"/"} />} />
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to={"/"} />} />
         <Route path="/watch/:id" element={user ? <WatchPage /> : <Navigate to={"/login"} />} />
+        <Route path="/person/:id/details" element={user ? <PersonPage /> : <Navigate to={"/login"} />} />
         <Route path="/search" element={user ? <SearchPage /> : <Navigate to={"/login"} />} />
         <Route path="/history" element={user ? <HistoryPage /> : <Navigate to={"/login"} />} />
         <Route path="/*" element={<NotFoundPage />} />
