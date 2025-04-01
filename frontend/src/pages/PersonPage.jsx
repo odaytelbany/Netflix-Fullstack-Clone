@@ -6,9 +6,11 @@ import Navbar from "../components/Navbar";
 import { formatDate } from "../utils/formatDate";
 import { ORIGINAL_IMG_BASE_URL, SMALL_IMG_BASE_URL } from "../utils/constants";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useContentStore } from "../store/content";
 
 const PersonPage = () => {
   const { id } = useParams();
+  const {setContentType} = useContentStore();
   const sliderRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState({});
@@ -129,6 +131,7 @@ const PersonPage = () => {
                 return (
                     <Link
                       to={`/watch/${content?.id}`}
+                      onClick={() => setContentType(content?.media_type)}
                       key={`${content?.media_type}-${content?.id}`}
                       className="w-52 flex-none"
                     >

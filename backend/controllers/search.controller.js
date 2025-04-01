@@ -13,21 +13,28 @@ export const searchMulti = async (req, res) => {
       return res.status(404).send(null);
     }
 
-    await User.findByIdAndUpdate(req.user._id, {
-      $addToSet: {
-        searchHistory: {
-          $each: [
-            {
-              id: response.results[0].id,
-              image: response.results[0].profile_path || response.results[0].poster_path || "",
-              title: response.results[0].name || response.results[0].title,
-              searchType: response.results[0].media_type,
-              createdAt: new Date(),
-            },
-          ],
-        },
-      },
+    const existingItem = await User.findOne({
+      _id: req.user._id,
+      searchHistory: { $elemMatch: { id: response.results[0].id } },
     });
+
+    if (!existingItem) {
+      await User.findByIdAndUpdate(req.user._id, {
+        $addToSet: {
+          searchHistory: {
+            $each: [
+              {
+                id: response.results[0].id,
+                image: response.results[0].profile_path || response.results[0].poster_path || "",
+                title: response.results[0].name || response.results[0].title,
+                searchType: response.results[0].media_type,
+                createdAt: new Date(),
+              },
+            ],
+          },
+        },
+      });
+    }
     res.status(200).json({ success: true, data: response.results });
   } catch (error) {
     console.log("Error in searchMulti controller: ", error);
@@ -49,17 +56,24 @@ export const searchPerson = async (req, res) => {
       return res.status(404).send(null);
     }
 
-    await User.findByIdAndUpdate(req.user._id, {
-      $push: {
-        searchHistory: {
-          id: response.results[0].id,
-          image: response.results[0].profile_path,
-          title: response.results[0].name,
-          searchType: "person",
-          createdAt: new Date(),
-        },
-      },
+    const existingPerson = await User.findOne({
+      _id: req.user._id,
+      searchHistory: { $elemMatch: { id: response.results[0].id } },
     });
+
+    if (!existingPerson) {
+      await User.findByIdAndUpdate(req.user._id, {
+        $push: {
+          searchHistory: {
+            id: response.results[0].id,
+            image: response.results[0].profile_path,
+            title: response.results[0].name,
+            searchType: "person",
+            createdAt: new Date(),
+          },
+        },
+      });
+    }
     res.status(200).json({ success: true, data: response.results });
   } catch (error) {
     console.log("Error in searchPerson controller: ", error);
@@ -81,17 +95,23 @@ export const searchMovie = async (req, res) => {
       return res.status(404).send(null);
     }
 
-    await User.findByIdAndUpdate(req.user._id, {
-      $push: {
-        searchHistory: {
-          id: response.results[0].id,
-          image: response.results[0].poster_path,
-          title: response.results[0].title,
-          searchType: "movie",
-          createdAt: new Date(),
-        },
-      },
+    const existingMovie = await User.findOne({
+      _id: req.user._id,
+      searchHistory: { $elemMatch: { id: response.results[0].id } },
     });
+    if (!existingMovie){
+      await User.findByIdAndUpdate(req.user._id, {
+        $push: {
+          searchHistory: {
+            id: response.results[0].id,
+            image: response.results[0].poster_path,
+            title: response.results[0].title,
+            searchType: "movie",
+            createdAt: new Date(),
+          },
+        },
+      });
+    }
     res.status(200).json({ success: true, data: response.results });
   } catch (error) {
     console.log("Error in searchMovie controller: ", error);
@@ -113,17 +133,24 @@ export const searchTv = async (req, res) => {
       return res.status(404).send(null);
     }
 
-    await User.findByIdAndUpdate(req.user._id, {
-      $push: {
-        searchHistory: {
-          id: response.results[0].id,
-          image: response.results[0].poster_path,
-          title: response.results[0].name,
-          searchType: "tv",
-          createdAt: new Date(),
-        },
-      },
+    const existingTv = await User.findOne({
+      _id: req.user._id,
+      searchHistory: { $elemMatch: { id: response.results[0].id } },
     });
+
+    if (!existingTv){
+      await User.findByIdAndUpdate(req.user._id, {
+        $push: {
+          searchHistory: {
+            id: response.results[0].id,
+            image: response.results[0].poster_path,
+            title: response.results[0].name,
+            searchType: "tv",
+            createdAt: new Date(),
+          },
+        },
+      });
+    }
     res.status(200).json({ success: true, data: response.results });
   } catch (error) {
     console.log("Error in searchTv controller: ", error);
