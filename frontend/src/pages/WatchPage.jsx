@@ -9,16 +9,19 @@ import { ORIGINAL_IMG_BASE_URL, SMALL_IMG_BASE_URL } from "../utils/constants";
 import WatchPageSkeleton from "../components/skeletons/WatchPageSkeleton";
 import { formatDate } from "../utils/formatDate";
 import useGetContentCredits from "../hooks/useGetContentCredits";
+import useGetImages from "../hooks/useGetImages";
 
 const WatchPage = () => {
   const { id } = useParams();
-  const {allCredits} = useGetContentCredits(id);
+  const { allCredits } = useGetContentCredits(id);
+  const { allImages } = useGetImages(id);
+  console.log(allImages);
   const [trailers, setTrailers] = useState([]);
   const [similarContent, setSimilarContent] = useState([]);
   const [currentTrailerIndex, setCurrentTrailerIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState({});
-  const { contentType } = useContentStore();
+  const { contentType, setContentType } = useContentStore();
 
   const creditsSliderRef = useRef(null);
   const similarSliderRef = useRef(null);
@@ -96,24 +99,26 @@ const WatchPage = () => {
     }
   };
 
-
-  if (loading) return (
-    <div className="min-h-screen bg-black p-10">
+  if (loading)
+    return (
+      <div className="min-h-screen bg-black p-10">
         <WatchPageSkeleton />
-    </div>
-  )
+      </div>
+    );
 
   if (!content) {
     return (
-        <div className="bg-black text-white h-screen">
-            <div className="max-w-6xl mx-auto">
-                <Navbar />
-                <div className="text-center mx-auto px-4 py-8 h-full mt-40">
-                    <h2 className="text-2xl sm:text-5xl font-bold text-balance">Content not found !</h2>
-                </div>
-            </div>
+      <div className="bg-black text-white h-screen">
+        <div className="max-w-6xl mx-auto">
+          <Navbar />
+          <div className="text-center mx-auto px-4 py-8 h-full mt-40">
+            <h2 className="text-2xl sm:text-5xl font-bold text-balance">
+              Content not found !
+            </h2>
+          </div>
         </div>
-    )
+      </div>
+    );
   }
 
   return (
@@ -175,10 +180,7 @@ const WatchPage = () => {
               {content?.title || content?.name}
             </h2>
             <p className="mt-2 text-lg">
-              {formatDate(
-                content?.release_date || content?.first_air_date
-              )}{" "}
-              |{" "}
+              {formatDate(content?.release_date || content?.first_air_date)} |{" "}
               {content?.adult ? (
                 <span className="text-red-600">18+</span>
               ) : (
@@ -194,11 +196,25 @@ const WatchPage = () => {
           />
         </div>
 
+        {allImages.length > 0 && (
+          <div className="mt-12 max-w-5xl mx-auto relative flex">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4 mx-auto place-items-center items-center">
+              {allImages.map((image) => (
+                <div key={image?.id} className="w-full">
+                  <img
+                    src={SMALL_IMG_BASE_URL + image?.file_path}
+                    alt="image"
+                    className="w-full h-auto max-w-md md:max-w-lg lg:max-w-xl xl:max-w-xl rounded-md object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {allCredits.length > 0 && (
           <div className="mt-12 max-w-5xl mx-auto relative">
-            <h3 className="text-3xl font-bold mb-4">
-              The Cast
-            </h3>
+            <h3 className="text-3xl font-bold mb-4">The Cast</h3>
             <div
               className="flex overflow-x-scroll scrollbar-hide gap-4 pb-4 group"
               ref={creditsSliderRef}
@@ -206,24 +222,24 @@ const WatchPage = () => {
               {allCredits.map((content) => {
                 if (content?.profile_path === null) return null;
                 return (
-                    <Link
-                      to={`/person/${content?.id}/details`}
-                      key={content?.id}
-                      className="w-52 flex-none"
-                    >
-                      <img
-                        src={SMALL_IMG_BASE_URL + content?.profile_path}
-                        alt="profile image"
-                        className="w-full h-auto rounded-md"
-                      />
-                      <h4 className="mt-2 text-lg font-semibold">
-                        {content?.name}
-                      </h4>
-                      <h6 className="mt-0.5 text-sm text-gray-400">
-                        {content?.character}
-                      </h6>
-                    </Link>
-                  )
+                  <Link
+                    to={`/person/${content?.id}/details`}
+                    key={content?.id}
+                    className="w-52 flex-none"
+                  >
+                    <img
+                      src={SMALL_IMG_BASE_URL + content?.profile_path}
+                      alt="profile image"
+                      className="w-full h-auto rounded-md"
+                    />
+                    <h4 className="mt-2 text-lg font-semibold">
+                      {content?.name}
+                    </h4>
+                    <h6 className="mt-0.5 text-sm text-gray-400">
+                      {content?.character}
+                    </h6>
+                  </Link>
+                );
               })}
 
               <ChevronLeft
@@ -250,21 +266,22 @@ const WatchPage = () => {
               {similarContent.map((content) => {
                 if (content?.poster_path === null) return null;
                 return (
-                    <Link
-                      to={`/watch/${content?.id}`}
-                      key={content?.id}
-                      className="w-52 flex-none"
-                    >
-                      <img
-                        src={SMALL_IMG_BASE_URL + content?.poster_path}
-                        alt="poster"
-                        className="w-full h-auto rounded-md"
-                      />
-                      <h4 className="mt-2 text-lg font-semibold">
-                        {content?.title || content?.name}
-                      </h4>
-                    </Link>
-                  )
+                  <Link
+                    to={`/watch/${content?.id}`}
+                    onClick={() => setContentType(content?.media_type)}
+                    key={content?.id}
+                    className="w-52 flex-none"
+                  >
+                    <img
+                      src={SMALL_IMG_BASE_URL + content?.poster_path}
+                      alt="poster"
+                      className="w-full h-auto rounded-md"
+                    />
+                    <h4 className="mt-2 text-lg font-semibold">
+                      {content?.title || content?.name}
+                    </h4>
+                  </Link>
+                );
               })}
 
               <ChevronLeft
