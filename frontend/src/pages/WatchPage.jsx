@@ -10,6 +10,7 @@ import WatchPageSkeleton from "../components/skeletons/WatchPageSkeleton";
 import { formatDate } from "../utils/formatDate";
 import useGetContentCredits from "../hooks/useGetContentCredits";
 import useGetImages from "../hooks/useGetImages";
+import ImageViewer from "../components/ImageViewer";
 
 const WatchPage = () => {
   const { id } = useParams();
@@ -197,19 +198,7 @@ const WatchPage = () => {
         </div>
 
         {allImages.length > 0 && (
-          <div className="mt-12 max-w-5xl mx-auto relative flex">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4 mx-auto place-items-center items-center">
-              {allImages.map((image) => (
-                <div key={image?.id} className="w-full">
-                  <img
-                    src={SMALL_IMG_BASE_URL + image?.file_path}
-                    alt="image"
-                    className="w-full h-auto max-w-md md:max-w-lg lg:max-w-xl xl:max-w-xl rounded-md object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+          <ImageViewer images={allImages}/>
         )}
 
         {allCredits.length > 0 && (

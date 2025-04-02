@@ -41,7 +41,7 @@ export const getImages = async (req, res) =>{
     try {
         const {id} = req.params;
         const data = await fetchFromTmdb(`https://api.themoviedb.org/3/movie/${id}/images`)
-        res.json({success: true, data: {images: data.backdrops.slice(0, 24)}});
+        res.json({success: true, data: {images: data.backdrops}});
     } catch (error) {
         if (error.message.includes("404")) {
             return res.status(404).send(null);
