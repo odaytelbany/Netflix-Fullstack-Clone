@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useContentStore } from "../store/content";
 import Navbar from "../components/Navbar";
 import axios from "axios";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, PlusIcon } from "lucide-react";
 import ReactPlayer from "react-player";
 import { ORIGINAL_IMG_BASE_URL, SMALL_IMG_BASE_URL } from "../utils/constants";
 import WatchPageSkeleton from "../components/skeletons/WatchPageSkeleton";
@@ -11,6 +11,8 @@ import { formatDate } from "../utils/formatDate";
 import useGetContentCredits from "../hooks/useGetContentCredits";
 import useGetImages from "../hooks/useGetImages";
 import ImageViewer from "../components/ImageViewer";
+import toast from "react-hot-toast";
+import { set } from "mongoose";
 
 const WatchPage = () => {
   const { id } = useParams();
@@ -18,6 +20,8 @@ const WatchPage = () => {
   const { allImages } = useGetImages(id);
   console.log(allImages);
   const [trailers, setTrailers] = useState([]);
+  const [isInWatchList, setIsInWatchList] = useState(false);
+  const [isInWatchListLoading, setIsInWatchListLoading] = useState(false);
   const [similarContent, setSimilarContent] = useState([]);
   const [currentTrailerIndex, setCurrentTrailerIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -40,6 +44,21 @@ const WatchPage = () => {
     };
 
     getTrailers();
+  }, [contentType, id]);
+
+  useEffect(() => {
+    const getIsInWatchList = async () => {
+      try {
+        const res = await axios.get(`/api/v1/watchList/${id}`);
+        setIsInWatchList(res.data.data);
+      } catch (err) {
+        if (err.message.includes("404")) {
+          setIsInWatchList(false);
+        }
+      }
+    };
+
+    getIsInWatchList();
   }, [contentType, id]);
 
   useEffect(() => {
@@ -99,6 +118,33 @@ const WatchPage = () => {
       });
     }
   };
+
+  const handleWatchList = async (item) => {
+    if (isInWatchList) {
+      try {
+        setIsInWatchListLoading(true);
+        await axios.delete(`/api/v1/watchList/${item.id}`);
+        setIsInWatchList(false);
+        setIsInWatchListLoading(false);
+        toast.success("Removed from watchlist");
+      } catch (error) {
+        console.log("Error removing from watchlist:", error);
+        toast.error("Error removing from watchlist");
+      }
+    } else {
+      try {
+        setIsInWatchListLoading(true);
+        await axios.post("/api/v1/watchList", item);
+        setIsInWatchList(true);
+        setIsInWatchListLoading(false);
+        toast.success("Added to watchlist");
+      } catch (error) {
+        console.log("Error adding to watchlist:", error);
+        toast.error("Error adding to watchlist");
+      }
+    }
+  }
+
 
   if (loading)
     return (
@@ -177,9 +223,14 @@ const WatchPage = () => {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-20 max-w-6xl mx-auto">
           <div className="mb-4 md:mb-0">
+            <div className="flex flex-row items-center justify-between">
             <h2 className="text-5xl font-bold text-balance">
               {content?.title || content?.name}
             </h2>
+            <button onClick={() => handleWatchList(content)} className={`flex items-center gap-1 bg-gray-700 rounded-3xl px-4 py-2 hover:bg-gray-800 cursor-pointer ${isInWatchList ? "bg-red-700 hover:bg-red-800" : ""}`}>
+              {isInWatchListLoading ? ("Loading...") : (<>{isInWatchList ? <Check size={18}/> : <PlusIcon size={18}/>} Watchlist</>)}
+            </button>
+            </div>
             <p className="mt-2 text-lg">
               {formatDate(content?.release_date || content?.first_air_date)} |{" "}
               {content?.adult ? (

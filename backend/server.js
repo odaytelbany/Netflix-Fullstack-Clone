@@ -6,6 +6,7 @@ import movieRouter from './routes/movie.route.js';
 import tvRouter from './routes/tv.route.js';
 import searchRouter from './routes/search.route.js';
 import personRouter from './routes/person.route.js';
+import watchListRoute from './routes/watchList.route.js'
 import { ENV_VARS } from './config/envVars.js';
 import { connectDB } from './config/db.js';
 import { protectRoute } from './middlewares/protectRoute.js';
@@ -23,6 +24,7 @@ app.use('/api/v1/movie', protectRoute, movieRouter);
 app.use('/api/v1/tv', protectRoute, tvRouter);
 app.use('/api/v1/person', protectRoute, personRouter);
 app.use('/api/v1/search', protectRoute, searchRouter);
+app.use('/api/v1/watchlist', protectRoute, watchListRoute);
 
 if (ENV_VARS.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '/frontend/dist')));

@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
     searchHistory: {
         type: Array,
         default: []
+    },
+    watchList: {
+        type: Array,
+        default: []
     }
 });
 
