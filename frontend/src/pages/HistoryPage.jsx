@@ -24,6 +24,7 @@ const HistoryPage = () => {
   const handleDelete = async (item) => {
     try {
       await axios.delete(`/api/v1/search/history/${item.id}`);
+      toast.success("Item deleted successfully!");
       setSearchHistory(searchHistory.filter((search) => search.id !== item.id));
     } catch {
       toast.error("Faild to delete!")
@@ -87,7 +88,7 @@ const HistoryPage = () => {
                 >
                   {item.searchType.toUpperCase()}
                 </span>
-                <Trash className="size-5 ml-4 cursor-pointer hover:fill-red-600 hover:text-red-600" onClick={() => handleDelete(item)} />
+                <Trash className="flex-none size-5 ml-4 cursor-pointer hover:fill-red-600 hover:text-red-600" onClick={() => handleDelete(item)} />
               </div>
             ))
           }

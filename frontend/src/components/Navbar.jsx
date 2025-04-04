@@ -18,7 +18,7 @@ const Navbar = () => {
             className="w-32 sm:w-40"
           />
         </Link>
-        <div className="hidden sm:flex gap-2 items-center">
+        <div className="hidden sm:flex gap-4 items-center">
           <Link
             to="/"
             onClick={() => setContentType("movie")}
@@ -35,6 +35,9 @@ const Navbar = () => {
           </Link>
           <Link to="/history" className="hover:underline">
             Search History
+          </Link>
+          <Link to="/watchlist" className="hover:underline">
+            Watchlist
           </Link>
         </div>
       </div>
@@ -81,6 +84,13 @@ const Navbar = () => {
             onClick={toggleMobileMenu}
           >
             Search History
+          </Link>
+          <Link
+            to={"/watchlist"}
+            className="block hover:underline p-2"
+            onClick={toggleMobileMenu}
+          >
+            Watchlist
           </Link>
         </div>
       )}

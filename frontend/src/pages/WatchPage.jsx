@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useContentStore } from "../store/content";
 import Navbar from "../components/Navbar";
 import axios from "axios";
-import { Check, ChevronLeft, ChevronRight, PlusIcon } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Loader, PlusIcon } from "lucide-react";
 import ReactPlayer from "react-player";
 import { ORIGINAL_IMG_BASE_URL, SMALL_IMG_BASE_URL } from "../utils/constants";
 import WatchPageSkeleton from "../components/skeletons/WatchPageSkeleton";
@@ -12,7 +12,7 @@ import useGetContentCredits from "../hooks/useGetContentCredits";
 import useGetImages from "../hooks/useGetImages";
 import ImageViewer from "../components/ImageViewer";
 import toast from "react-hot-toast";
-import { set } from "mongoose";
+import { getTvAirDate } from "../utils/getTvAirDate";
 
 const WatchPage = () => {
   const { id } = useParams();
@@ -134,7 +134,7 @@ const WatchPage = () => {
     } else {
       try {
         setIsInWatchListLoading(true);
-        await axios.post("/api/v1/watchList", item);
+        await axios.post("/api/v1/watchList", {...item, media_type: contentType});
         setIsInWatchList(true);
         setIsInWatchListLoading(false);
         toast.success("Added to watchlist");
@@ -143,8 +143,7 @@ const WatchPage = () => {
         toast.error("Error adding to watchlist");
       }
     }
-  }
-
+  };
 
   if (loading)
     return (
@@ -224,15 +223,31 @@ const WatchPage = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-20 max-w-6xl mx-auto">
           <div className="mb-4 md:mb-0">
             <div className="flex flex-row items-center justify-between">
-            <h2 className="text-5xl font-bold text-balance">
-              {content?.title || content?.name}
-            </h2>
-            <button onClick={() => handleWatchList(content)} className={`flex items-center gap-1 bg-gray-700 rounded-3xl px-4 py-2 hover:bg-gray-800 cursor-pointer ${isInWatchList ? "bg-red-700 hover:bg-red-800" : ""}`}>
-              {isInWatchListLoading ? ("Loading...") : (<>{isInWatchList ? <Check size={18}/> : <PlusIcon size={18}/>} Watchlist</>)}
-            </button>
+              <h2 className="text-5xl font-bold text-balance">
+                {content?.title || content?.name}
+              </h2>
+              <button
+                onClick={() => handleWatchList(content)}
+                className={`flex items-center gap-1 bg-gray-700 rounded-3xl px-4 py-2 hover:bg-gray-800 cursor-pointer ${
+                  isInWatchList ? "bg-red-700 hover:bg-red-800" : ""
+                }`}
+              >
+                {isInWatchListLoading ? (
+                  <Loader className="text-white size-5 animate-spin" />
+                ) : (
+                  <>
+                    {isInWatchList ? (
+                      <Check size={18} />
+                    ) : (
+                      <PlusIcon size={18} />
+                    )}{" "}
+                    Watchlist
+                  </>
+                )}
+              </button>
             </div>
             <p className="mt-2 text-lg">
-              {formatDate(content?.release_date || content?.first_air_date)} |{" "}
+              {contentType === "movie" ? formatDate(content?.release_date || content?.first_air_date) : getTvAirDate(content)} |{" "}
               {content?.adult ? (
                 <span className="text-red-600">18+</span>
               ) : (
@@ -248,9 +263,7 @@ const WatchPage = () => {
           />
         </div>
 
-        {allImages.length > 0 && (
-          <ImageViewer images={allImages}/>
-        )}
+        {allImages.length > 0 && <ImageViewer images={allImages} />}
 
         {allCredits.length > 0 && (
           <div className="mt-12 max-w-5xl mx-auto relative">
