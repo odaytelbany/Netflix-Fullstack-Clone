@@ -73,7 +73,7 @@ const MovieSlider = ({ category, genre }) => {
             <Link
               key={item.id}
               to={`/watch/${item.id}`}
-              className="min-w-[250px] relative group"
+              className="min-w-[250px] relative group "
             >
               <div className="rounded-lg overflow-hidden">
                 <img

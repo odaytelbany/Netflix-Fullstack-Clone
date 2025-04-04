@@ -7,35 +7,29 @@ import { useContentStore } from "../store/content";
 import { BookmarkCheck, CircleAlert } from "lucide-react";
 import toast from "react-hot-toast";
 import { getTvAirDate } from "../utils/getTvAirDate";
+import { getRunTime } from "../utils/getRunTime";
+import WatchListPageSkeleton from "../components/skeletons/WatchListPageSkeleton";
 
 const WatchListPage = () => {
   const { setContentType } = useContentStore();
   const [watchlist, setWatchList] = useState([]);
+  const [watchlistLoading, setWatchlistLoading] = useState(true);
+  
   useEffect(() => {
     const getWatchlist = async () => {
       try {
         const res = await axios.get("/api/v1/watchlist");
+        setWatchlistLoading(false);
         setWatchList(res.data.data);
       } catch (error) {
         console.log("Error: ", error.message);
         setWatchList([]);
+        setWatchlistLoading(false);
       }
     };
 
     getWatchlist();
   }, []);
-
-  const getMovieRuntime = (runtimeInMinutes) => {
-    const totalMinutes = Math.floor(runtimeInMinutes);
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    const parts = [];
-    if (hours > 0) parts.push(`${hours}h`);
-    if (minutes > 0 || hours === 0) parts.push(`${minutes}m`);
-
-    return parts.join(" ");
-  };
 
 
   const removeFromWatchlist = async (item) => {
@@ -48,6 +42,14 @@ const WatchListPage = () => {
         toast.error("Error removing from watchlist");
       }
   };
+
+  if (watchlistLoading) {
+    return (
+      <div className="bg-black min-h-screen px-32 py-4">
+        <WatchListPageSkeleton />
+      </div>
+    )
+  }
 
   return (
     <div className="bg-black text-white min-h-screen">
@@ -100,7 +102,7 @@ const WatchListPage = () => {
                     </h4>
                     <h4 className="text-gray-300">
                       {item?.media_type === "movie"
-                        ? `${getMovieRuntime(item?.runtime)}`
+                        ? `${getRunTime(item?.runtime)}`
                         : `${item.number_of_episodes} eps`}
                     </h4>
                     <h4 className="text-gray-300">

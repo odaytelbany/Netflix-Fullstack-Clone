@@ -13,6 +13,7 @@ import useGetImages from "../hooks/useGetImages";
 import ImageViewer from "../components/ImageViewer";
 import toast from "react-hot-toast";
 import { getTvAirDate } from "../utils/getTvAirDate";
+import { getRunTime } from "../utils/getRunTime";
 
 const WatchPage = () => {
   const { id } = useParams();
@@ -248,6 +249,7 @@ const WatchPage = () => {
             </div>
             <p className="mt-2 text-lg">
               {contentType === "movie" ? formatDate(content?.release_date || content?.first_air_date) : getTvAirDate(content)} |{" "}
+              {contentType === "movie" ? getRunTime(content?.runtime) : `${content.number_of_episodes} eps`} |{" "}
               {content?.adult ? (
                 <span className="text-red-600">18+</span>
               ) : (
@@ -316,22 +318,22 @@ const WatchPage = () => {
               className="flex overflow-x-scroll scrollbar-hide gap-4 pb-4 group"
               ref={similarSliderRef}
             >
-              {similarContent.map((content) => {
-                if (content?.poster_path === null) return null;
+              {similarContent.map((similarItem) => {
+                if (similarItem?.poster_path === null) return null;
                 return (
                   <Link
-                    to={`/watch/${content?.id}`}
-                    onClick={() => setContentType(content?.media_type)}
-                    key={content?.id}
+                    to={`/watch/${similarItem?.id}`}
+                    onClick={() => setContentType(similarItem?.media_type)}
+                    key={similarItem?.id}
                     className="w-52 flex-none"
                   >
                     <img
-                      src={SMALL_IMG_BASE_URL + content?.poster_path}
+                      src={SMALL_IMG_BASE_URL + similarItem?.poster_path}
                       alt="poster"
                       className="w-full h-auto rounded-md"
                     />
                     <h4 className="mt-2 text-lg font-semibold">
-                      {content?.title || content?.name}
+                      {similarItem?.title || similarItem?.name}
                     </h4>
                   </Link>
                 );
