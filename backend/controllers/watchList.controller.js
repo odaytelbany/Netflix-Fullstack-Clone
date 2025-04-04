@@ -11,7 +11,6 @@ export const getWatchList = async (req, res) => {
 };
 
 export const addToWatchList = async (req, res) => {
-  console.log(req.body);
   const item = req.body;
   try {
     const existingItem = await User.findOne({

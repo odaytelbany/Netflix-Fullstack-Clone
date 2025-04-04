@@ -14,6 +14,9 @@ const WatchListPage = () => {
   const { setContentType } = useContentStore();
   const [watchlist, setWatchList] = useState([]);
   const [watchlistLoading, setWatchlistLoading] = useState(true);
+
+  const width = window.innerWidth;  
+  const cutLimit = width > 768 ? 300 : 120;
   
   useEffect(() => {
     const getWatchlist = async () => {
@@ -45,7 +48,7 @@ const WatchListPage = () => {
 
   if (watchlistLoading) {
     return (
-      <div className="bg-black min-h-screen px-32 py-4">
+      <div className="bg-black min-h-screen px-4 md:px-32 py-4">
         <WatchListPageSkeleton />
       </div>
     )
@@ -58,7 +61,6 @@ const WatchListPage = () => {
         <h1 className="text-3xl font-bold mb-8">Watchlist</h1>
         <div className="flex flex-col gap-4">
           {watchlist.map((item, index) => {
-            console.log(item);
             return (
               <div
                 key={item.id}
@@ -110,8 +112,9 @@ const WatchListPage = () => {
                     </h4>
                   </div>
                   <p>
-                    {item?.overview.length > 200
-                      ? item?.overview.slice(0, 200) + "..."
+                    {
+                    item?.overview.length > cutLimit
+                      ? item?.overview.slice(0, cutLimit) + "..."
                       : item?.overview}
                   </p>
                 </div>

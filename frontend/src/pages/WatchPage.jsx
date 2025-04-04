@@ -19,7 +19,6 @@ const WatchPage = () => {
   const { id } = useParams();
   const { allCredits } = useGetContentCredits(id);
   const { allImages } = useGetImages(id);
-  console.log(allImages);
   const [trailers, setTrailers] = useState([]);
   const [isInWatchList, setIsInWatchList] = useState(false);
   const [isInWatchListLoading, setIsInWatchListLoading] = useState(false);
@@ -221,15 +220,15 @@ const WatchPage = () => {
           )}
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-20 max-w-6xl mx-auto">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-20 max-w-6xl mx-auto">
           <div className="mb-4 md:mb-0">
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center justify-between">
               <h2 className="text-5xl font-bold text-balance">
                 {content?.title || content?.name}
               </h2>
               <button
                 onClick={() => handleWatchList(content)}
-                className={`flex items-center gap-1 bg-gray-700 rounded-3xl px-4 py-2 hover:bg-gray-800 cursor-pointer ${
+                className={`flex self-center items-center gap-1 bg-gray-700 rounded-3xl px-4 py-2 hover:bg-gray-800 cursor-pointer ${
                   isInWatchList ? "bg-red-700 hover:bg-red-800" : ""
                 }`}
               >

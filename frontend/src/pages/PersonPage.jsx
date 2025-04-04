@@ -15,7 +15,6 @@ const PersonPage = () => {
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState({});
   const [personCredits, setPersonCredits] = useState();
-  console.log(personCredits);
 
   useEffect(() => {
     const getContentDetails = async () => {
