@@ -64,7 +64,9 @@ const WatchListPage = () => {
             return (
               <div
                 key={item.id}
-                className="flex items-center gap-4 bg-gray-800  p-4 rounded-lg"
+                className={`flex items-center gap-4 pb-8 rounded-lg ${
+                  index + 1 < watchlist.length ? "border-b border-gray-800" : ""
+                }`}
               >
                 <Link
                   to={`/watch/${item?.id}`}

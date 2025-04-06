@@ -78,6 +78,7 @@ const SearchPage = () => {
         >
           <input
             type="text"
+            autoFocus
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder={activeTap === "multi" ? "Search for anything" : `Search for a ` + activeTap}

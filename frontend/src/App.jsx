@@ -13,6 +13,7 @@ import HistoryPage from "./pages/HistoryPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import PersonPage from "./pages/PersonPage";
 import WatchListPage from "./pages/WatchListPage";
+import EpisodesPage from "./pages/EpisodesPage";
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
         <Route path="/signup" element={!user ? <SignupPage /> : <Navigate to={"/"} />} />
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to={"/"} />} />
         <Route path="/watch/:id" element={user ? <WatchPage /> : <Navigate to={"/login"} />} />
+        <Route path="/watch/:id/episodes" element={user ? <EpisodesPage /> : <Navigate to={"/login"} />} />
         <Route path="/person/:id/details" element={user ? <PersonPage /> : <Navigate to={"/login"} />} />
         <Route path="/search" element={user ? <SearchPage /> : <Navigate to={"/login"} />} />
         <Route path="/history" element={user ? <HistoryPage /> : <Navigate to={"/login"} />} />

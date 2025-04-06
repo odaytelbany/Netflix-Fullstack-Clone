@@ -65,7 +65,7 @@ const ImageViewer = ({ images }) => {
           >
             <Zoom>
               <img
-                src={ORIGINAL_IMG_BASE_URL + images[currentIndex].file_path}
+                src={ORIGINAL_IMG_BASE_URL + images[currentIndex]?.file_path}
                 alt="image"
                 className="w-full h-full object-contain"
               />

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllGenres, getDetails, getSimilarTvs, getTrailers, getTrendingTv, getTvCategory, gettvGenre, getCredits, getImages } from '../controllers/tv.controller.js';
+import { getAllGenres, getDetails, getSimilarTvs, getTrailers, getTrendingTv, getTvCategory, gettvGenre, getCredits, getImages, getSeasonEpisodes } from '../controllers/tv.controller.js';
 
 const router = express.Router();
 
@@ -10,6 +10,7 @@ router.get("/:id/details", getDetails);
 router.get("/:id/images", getImages);
 router.get("/:id/credits", getCredits);
 router.get("/:id/similar", getSimilarTvs);
+router.get("/:id/season/:season", getSeasonEpisodes);
 router.get("/:category", getTvCategory);
 router.get("/genre/:genre", gettvGenre);
 

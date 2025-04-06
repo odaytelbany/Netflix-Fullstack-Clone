@@ -3,7 +3,13 @@ import { Link, useParams } from "react-router-dom";
 import { useContentStore } from "../store/content";
 import Navbar from "../components/Navbar";
 import axios from "axios";
-import { Check, ChevronLeft, ChevronRight, Loader, PlusIcon } from "lucide-react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Loader,
+  PlusIcon,
+} from "lucide-react";
 import ReactPlayer from "react-player";
 import { ORIGINAL_IMG_BASE_URL, SMALL_IMG_BASE_URL } from "../utils/constants";
 import WatchPageSkeleton from "../components/skeletons/WatchPageSkeleton";
@@ -26,7 +32,7 @@ const WatchPage = () => {
   const [currentTrailerIndex, setCurrentTrailerIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState({});
-  const { contentType, setContentType } = useContentStore();
+  const { contentType } = useContentStore();
 
   const creditsSliderRef = useRef(null);
   const similarSliderRef = useRef(null);
@@ -83,7 +89,17 @@ const WatchPage = () => {
         setContent(res.data.data.details);
       } catch (err) {
         if (err.message.includes("404")) {
-          setContent(null);
+          try {
+            const res = await axios.get(
+              `/api/v1/${
+                contentType === "movie" ? "tv" : "movie"
+              }/${id}/details`
+            );
+            setContent(res.data.data.details);
+          } catch (error) {
+            console.log("Error fetching content details:", error);
+            setContent(null);
+          }
         }
       } finally {
         setLoading(false);
@@ -134,7 +150,10 @@ const WatchPage = () => {
     } else {
       try {
         setIsInWatchListLoading(true);
-        await axios.post("/api/v1/watchList", {...item, media_type: contentType});
+        await axios.post("/api/v1/watchList", {
+          ...item,
+          media_type: contentType,
+        });
         setIsInWatchList(true);
         setIsInWatchListLoading(false);
         toast.success("Added to watchlist");
@@ -166,6 +185,8 @@ const WatchPage = () => {
       </div>
     );
   }
+
+  console.log(content)
 
   return (
     <div className="bg-black min-h-screen text-white">
@@ -223,9 +244,19 @@ const WatchPage = () => {
         <div className="flex flex-col lg:flex-row items-center justify-between gap-20 max-w-6xl mx-auto">
           <div className="mb-4 md:mb-0">
             <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center justify-between">
-              <h2 className="text-5xl font-bold text-balance">
-                {content?.title || content?.name}
-              </h2>
+              <div className="flex flex-col gap-2">
+                {contentType === "tv" && (
+                  <Link to={`/watch/${id}/Episodes?title=${content?.name || content?.title}&&seasons=${content.
+                    number_of_seasons}`} className="flex items-center gap-3 cursor-pointer group">
+                    <p className="font-bold group-hover:underline">Episode guide</p>
+                    <p className="flex items-center">{content.number_of_episodes} <ChevronRight className="size-5 group-hover:text-red-600"/></p>
+                    
+                  </Link>
+                )}
+                <h2 className="text-5xl font-bold text-balance">
+                  {content?.title || content?.name}
+                </h2>
+              </div>
               <button
                 onClick={() => handleWatchList(content)}
                 className={`flex self-center items-center gap-1 bg-gray-700 rounded-3xl px-4 py-2 hover:bg-gray-800 cursor-pointer ${
@@ -247,8 +278,14 @@ const WatchPage = () => {
               </button>
             </div>
             <p className="mt-2 text-lg">
-              {contentType === "movie" ? formatDate(content?.release_date || content?.first_air_date) : getTvAirDate(content)} |{" "}
-              {contentType === "movie" ? getRunTime(content?.runtime) : `${content.number_of_episodes} eps`} |{" "}
+              {contentType === "movie"
+                ? formatDate(content?.release_date || content?.first_air_date)
+                : getTvAirDate(content)}{" "}
+              |{" "}
+              {contentType === "movie"
+                ? getRunTime(content?.runtime)
+                : `${content.number_of_episodes} eps`}{" "}
+              |{" "}
               {content?.adult ? (
                 <span className="text-red-600">18+</span>
               ) : (
@@ -322,7 +359,6 @@ const WatchPage = () => {
                 return (
                   <Link
                     to={`/watch/${similarItem?.id}`}
-                    onClick={() => setContentType(similarItem?.media_type)}
                     key={similarItem?.id}
                     className="w-52 flex-none"
                   >

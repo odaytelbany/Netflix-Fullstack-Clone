@@ -104,3 +104,13 @@ export const gettvGenre = async (req, res) =>{
         return res.status(500).json({success: false, message: "Internal server error!"})
     }
 }
+
+export const getSeasonEpisodes = async (req, res) =>{
+    try {
+        const {id, season} = req.params;
+        const data = await fetchFromTmdb(`https://api.themoviedb.org/3/tv/${id}/season/${season}?language=en-US`)
+        res.json({success: true, data: data.episodes });
+    } catch (error) {
+        return res.status(500).json({success: false, message: "Internal server error!"})
+    }
+}
