@@ -39,7 +39,7 @@ const SearchPage = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-center gap-3 mb-4">
           <button
-            className={`py-2 px-4 rounded ${
+            className={`text-sm sm:text-md py-2 px-4 rounded ${
               activeTap === "multi" ? "bg-red-600" : "bg-gray-800"
             } hover:bg-red-700 cursor-pointer`}
             onClick={() => handleTabClick("multi")}
@@ -47,7 +47,7 @@ const SearchPage = () => {
             Multi
           </button>
           <button
-            className={`py-2 px-4 rounded ${
+            className={`text-sm sm:text-md py-2 px-4 rounded ${
               activeTap === "movie" ? "bg-red-600" : "bg-gray-800"
             } hover:bg-red-700 cursor-pointer`}
             onClick={() => handleTabClick("movie")}
@@ -55,7 +55,7 @@ const SearchPage = () => {
             Movies
           </button>
           <button
-            className={`py-2 px-4 rounded ${
+            className={`text-sm md:text-base py-2 px-4 rounded ${
               activeTap === "tv" ? "bg-red-600" : "bg-gray-800"
             } hover:bg-red-700 cursor-pointer`}
             onClick={() => handleTabClick("tv")}
@@ -63,7 +63,7 @@ const SearchPage = () => {
             TV Shows
           </button>
           <button
-            className={`py-2 px-4 rounded ${
+            className={`text-sm sm:text-md py-2 px-4 rounded ${
               activeTap === "person" ? "bg-red-600" : "bg-gray-800"
             } hover:bg-red-700 cursor-pointer`}
             onClick={() => handleTabClick("person")}

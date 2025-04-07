@@ -16,7 +16,7 @@ const WatchListPage = () => {
   const [watchlistLoading, setWatchlistLoading] = useState(true);
 
   const width = window.innerWidth;  
-  const cutLimit = width > 768 ? 300 : 120;
+  const cutLimit = width > 768 ? 350 : 150;
   
   useEffect(() => {
     const getWatchlist = async () => {

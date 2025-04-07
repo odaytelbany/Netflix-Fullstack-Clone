@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { SMALL_IMG_BASE_URL } from "../utils/constants";
-import { Trash } from "lucide-react";
+import { AlertCircle, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 
 const HistoryPage = () => {
@@ -54,48 +54,83 @@ const HistoryPage = () => {
     return (
       <div className="bg-black min-h-screen text-white">
         <Navbar />
-        <div className="max-w-6xl mx-auto py-8 px-4">
-          <h1 className="text-3xl font-bold mb-8">Search History</h1>
-          <div className="flex justify-center items-center h-96">
-            <p>No Search History Found!</p>
+        <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-6">Search History</h1>
+          <div className="flex flex-col items-center justify-center h-96 text-gray-400">
+            <AlertCircle className="size-16 mb-4" />
+            <p className="text-lg">No search history found</p>
           </div>
         </div>
       </div>
     );
   }
+
   return (
     <div className="bg-black min-h-screen text-white">
       <Navbar />
-      <div className="max-w-6xl mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-8">Search History</h1>
-        <button className="flex items-center bg-red-600 hover:bg-red-700 text-white rounded px-4 py-2 font-semibold cursor-pointer mb-4" onClick={clearHistory}>Clear History</button>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {
-            searchHistory.map((item) => (
-              <div
-                key={item.id}
-                className="bg-gray-800 p-4 rounded flex items-start"
-              >
-                {item.image && <img src={SMALL_IMG_BASE_URL + item.image} alt="History Image" className="size-16 rounded-full object-cover mr-4" />}
-                <div className="flex flex-col">
-                  <span className="text-white text-lg">{item.title}</span>
-                  <span className="text-gray-400 text-sm">{formatDate(item.createdAt)}</span>
+      <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold">Search History</h1>
+          <button 
+            onClick={clearHistory}
+            className="flex items-center gap-2 bg-red-600/90 hover:bg-red-700 text-white rounded-lg px-4 py-2 
+                     font-medium transition-colors duration-200"
+          >
+            <Trash className="size-5" />
+            <span>Clear All History</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          {searchHistory.map((item) => (
+            <div
+              key={item.id}
+              className="group relative bg-gray-800/90 hover:bg-gray-700/80 rounded-lg p-4 transition-all
+                         duration-200 ease-out shadow-lg hover:shadow-xl"
+            >
+              <div className="flex items-start gap-3">
+                {item.image && (
+                  <img 
+                    src={SMALL_IMG_BASE_URL + item.image} 
+                    alt="History" 
+                    className="size-14 sm:size-16 flex-none rounded-lg object-cover shadow-sm
+                             aspect-video"
+                  />
+                )}
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base sm:text-lg font-semibold truncate mb-1">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-400 font-medium">
+                    {formatDate(item.createdAt)}
+                  </p>
                 </div>
-                <span
-                  className={`py-1 px-3 min-w-20 text-center rounded-full text-sm ml-auto ${item.searchType === "movie" ?
-                      "bg-red-600" : item.searchType === "tv" ? "bg-blue-600" : "bg-green-600"
-                    }`}
+              </div>
+
+              <div className="flex items-center justify-between mt-3">
+                <span 
+                  className={`inline-block py-1 px-3 rounded-full text-xs sm:text-sm font-medium 
+                            ${item.searchType === "movie" ? "bg-red-600/90" : 
+                              item.searchType === "tv" ? "bg-blue-600/90" : "bg-green-600/90"}`}
                 >
                   {item.searchType.toUpperCase()}
                 </span>
-                <Trash className="flex-none size-5 ml-4 cursor-pointer hover:fill-red-600 hover:text-red-600" onClick={() => handleDelete(item)} />
+                
+                <button 
+                  onClick={() => handleDelete(item)}
+                  className="text-gray-400 hover:text-red-500 transition-colors duration-150"
+                  aria-label="Delete item"
+                >
+                  <Trash className="size-5 sm:size-6" />
+                </button>
               </div>
-            ))
-          }
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 };
+
 
 export default HistoryPage;

@@ -186,8 +186,6 @@ const WatchPage = () => {
     );
   }
 
-  console.log(content)
-
   return (
     <div className="bg-black min-h-screen text-white">
       <div className="mx-auto container px-4 py-8 h-full">
