@@ -10,11 +10,11 @@ import useGetGenres from "../../hooks/useGetGenres";
 
 const ContentScreen = () => {
   const [imageLoading, setImageLoading] = useState(true);
-  const { trendingContent } = useGetTrendingContent();
+  const { trendingContent, isTrendingLoading } = useGetTrendingContent();
   const { allGenres } = useGetGenres();
   const {contentType} = useContentStore();
 
-  if (!trendingContent) return (
+  if (isTrendingLoading) return (
     <div className="h-screen text-white relative">
       <Navbar />
       <div className="absolute top-0 left-0 h-full w-full bg-black/70 flex items-center justify-center -z-10 shimmer"/>

@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const MovieSlider = ({ category, genre }) => {
   const [content, setContent] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showArrows, setShowArrows] = useState(false);
   const { contentType } = useContentStore();
   const sliderRef = useRef(null);
@@ -22,15 +23,19 @@ const MovieSlider = ({ category, genre }) => {
   useEffect(() => {
     if (genre && !category) {
       const getContent = async () => {
+        setLoading(true);
         const res = await axios.get(`/api/v1/${contentType}/genre/${genre.id}`);
         setContent(res.data.data);
+        setLoading(false);
       };
       getContent();
       return;
     } else if (category && !genre) {
       const getContent = async () => {
+        setLoading(true);
         const res = await axios.get(`/api/v1/${contentType}/${category}`);
         setContent(res.data.data);
+        setLoading(false);
       };
       getContent();
       return;
@@ -53,6 +58,23 @@ const MovieSlider = ({ category, genre }) => {
       });
     }
   };
+
+  if (loading) {
+    return (
+      <div className="bg-black text-white relative px-5 md:px-20">
+        <h2 className="mb-4 text-2xl font-bold">{formatedCategory}</h2>
+        <div className="flex space-x-4 overflow-x-scroll scrollbar-hide">
+          <div className="min-w-[250px] animate-pulse bg-gray-700 rounded-lg h-40"></div>
+          <div className="min-w-[250px] animate-pulse bg-gray-700 rounded-lg h-40"></div>
+          <div className="min-w-[250px] animate-pulse bg-gray-700 rounded-lg h-40"></div>
+          <div className="min-w-[250px] animate-pulse bg-gray-700 rounded-lg h-40"></div>
+          <div className="min-w-[250px] animate-pulse bg-gray-700 rounded-lg h-40"></div>
+          <div className="min-w-[250px] animate-pulse bg-gray-700 rounded-lg h-40"></div>
+          <div className="min-w-[250px] animate-pulse bg-gray-700 rounded-lg h-40"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

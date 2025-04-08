@@ -84,6 +84,7 @@ const WatchPage = () => {
 
   useEffect(() => {
     const getContentDetails = async () => {
+      setLoading(true);
       try {
         const res = await axios.get(`/api/v1/${contentType}/${id}/details`);
         setContent(res.data.data.details);
